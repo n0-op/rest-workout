@@ -1,5 +1,5 @@
 # rest-workout
-REST API for Physcial Workout entries CRUD operations. 
+REST API for Physical Workout entries CRUD operations. 
 
 # Motivation
 This project is an exercise in concepts/tools used for creating a REST web service. Concepts/tools being learned are git, DAO pattern, JPA, hibernate and others
