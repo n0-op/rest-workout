@@ -1,0 +1,118 @@
+package com.n0op.app.ws.service.impl;
+
+import com.n0op.app.ws.exceptions.CouldNotDeleteWorkoutException;
+import com.n0op.app.ws.exceptions.NoRecordFoundException;
+import com.n0op.app.ws.io.dao.DAO;
+import com.n0op.app.ws.io.dao.impl.MySQLDAO;
+import com.n0op.app.ws.service.WorkoutService;
+import com.n0op.app.ws.shared.dto.RunDTO;
+import com.n0op.app.ws.ui.model.response.ErrorMessages;
+import com.n0op.app.ws.utils.RunWorkoutUtils;
+import sun.misc.PostVMInitHook;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author DanM
+ */
+public class WorkoutServiceImpl implements WorkoutService {
+    private Map<Long, RunDTO> runMap = Collections.synchronizedMap(new LinkedHashMap<Long, RunDTO>());
+
+    DAO database;
+
+    public WorkoutServiceImpl() {
+        this.database = new MySQLDAO();
+    }
+
+    RunWorkoutUtils runWorkoutUtils = new RunWorkoutUtils();
+
+    @Override
+    public RunDTO createRun(RunDTO runDTO) {
+        RunDTO returnValue = null;
+
+        runWorkoutUtils.validateRunWorkoutRequiredFields(runDTO);
+
+        //Generate secure public used id
+        String runId = runWorkoutUtils.generateUserId(30);
+        runDTO.setRunId(runId);
+
+        returnValue = this.saveRun(runDTO);
+
+        return returnValue;
+    }
+
+
+
+    @Override
+    public RunDTO getRun(String id) {
+        RunDTO returnValue = null;
+
+        try{
+            this.database.openConnection();
+            returnValue = this.database.getRun(id);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            throw new NoRecordFoundException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+        finally{
+            this.database.closeConnection();
+        }
+
+        return returnValue;
+    }
+
+    @Override
+    public RunDTO getRunByName(RunDTO runDTO) {
+        return null;
+    }
+
+    @Override
+    public List<RunDTO> getRuns(int start, int limit) {
+        List<RunDTO> runs = null;
+
+        // Get runs from DB
+        try {
+            this.database.openConnection();
+            runs = this.database.getRuns(start, limit);
+
+        } finally {
+            this.database.closeConnection();
+        }
+
+        return runs;
+    }
+
+    @Override
+    public void updateRun(RunDTO runDTO) {
+        runWorkoutUtils.validateRunWorkoutRequiredFields(runDTO);
+
+        saveRun(runDTO);
+    }
+
+    @Override
+    public void deleteRun(RunDTO runDTO) {
+        try {
+            this.database.openConnection();
+            this.database.deleteRun(runDTO);
+        } catch (Exception ex) {
+            throw new CouldNotDeleteWorkoutException(ex.getMessage());
+        } finally {
+            this.database.closeConnection();
+        }
+    }
+
+     private RunDTO saveRun(RunDTO runDTO) {
+        RunDTO returnValue = null;
+
+        try {
+            this.database.openConnection();
+            returnValue = this.database.saveRun(runDTO);
+        } finally {
+            this.database.closeConnection();
+        }
+        return runDTO;
+    }
+}
