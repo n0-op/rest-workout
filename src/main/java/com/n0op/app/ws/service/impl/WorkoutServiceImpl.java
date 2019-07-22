@@ -1,6 +1,7 @@
 package com.n0op.app.ws.service.impl;
 
 import com.n0op.app.ws.exceptions.CouldNotDeleteWorkoutException;
+import com.n0op.app.ws.exceptions.CouldNotUpdateRecordException;
 import com.n0op.app.ws.exceptions.NoRecordFoundException;
 import com.n0op.app.ws.io.dao.DAO;
 import com.n0op.app.ws.io.dao.impl.MySQLDAO;
@@ -19,19 +20,19 @@ import java.util.Map;
  * @author DanM
  */
 public class WorkoutServiceImpl implements WorkoutService {
-    private Map<Long, RunDTO> runMap = Collections.synchronizedMap(new LinkedHashMap<Long, RunDTO>());
+    private Map<Long, RunDTO> runMap = Collections.synchronizedMap(new LinkedHashMap<>());
 
-    DAO database;
+    private DAO database;
 
     public WorkoutServiceImpl() {
         this.database = new MySQLDAO();
     }
 
-    RunWorkoutUtils runWorkoutUtils = new RunWorkoutUtils();
+    private RunWorkoutUtils runWorkoutUtils = new RunWorkoutUtils();
 
     @Override
     public RunDTO createRun(RunDTO runDTO) {
-        RunDTO returnValue = null;
+        RunDTO returnValue;
 
         runWorkoutUtils.validateRunWorkoutRequiredFields(runDTO);
 
@@ -48,7 +49,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public RunDTO getRun(String id) {
-        RunDTO returnValue = null;
+        RunDTO returnValue;
 
         try{
             this.database.openConnection();
@@ -71,7 +72,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public List<RunDTO> getRuns(int start, int limit) {
-        List<RunDTO> runs = null;
+        List<RunDTO> runs;
 
         // Get runs from DB
         try {
@@ -87,9 +88,15 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     public void updateRun(RunDTO runDTO) {
-        runWorkoutUtils.validateRunWorkoutRequiredFields(runDTO);
 
-        saveRun(runDTO);
+        try {
+            this.database.openConnection();
+            this.database.updateRun(runDTO);
+        } catch (Exception ex) {
+            throw new CouldNotUpdateRecordException(ex.getMessage());
+        } finally {
+            this.database.closeConnection();
+        }
     }
 
     @Override
@@ -113,6 +120,6 @@ public class WorkoutServiceImpl implements WorkoutService {
         } finally {
             this.database.closeConnection();
         }
-        return runDTO;
+        return returnValue;
     }
 }
