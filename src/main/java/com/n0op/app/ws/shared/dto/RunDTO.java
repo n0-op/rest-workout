@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class RunDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = -8099950857551130729L;
     private long id;
 
     private String name;
