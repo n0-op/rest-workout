@@ -11,5 +11,4 @@ public interface WorkoutService {
     List<RunDTO> getRuns(int start, int limit);
     void updateRun(RunDTO runDTO);
     void deleteRun(RunDTO runDTO);
-
 }

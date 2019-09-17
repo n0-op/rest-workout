@@ -32,7 +32,6 @@ public class RunsEntryPoint {
         RunDTO runDTO = new RunDTO();
         BeanUtils.copyProperties(requestObject, runDTO);
 
-
         WorkoutService workoutService = new WorkoutServiceImpl();
         RunDTO createdRunProfile = workoutService.createRun(runDTO);
 

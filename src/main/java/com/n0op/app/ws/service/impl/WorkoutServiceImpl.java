@@ -9,18 +9,13 @@ import com.n0op.app.ws.service.WorkoutService;
 import com.n0op.app.ws.shared.dto.RunDTO;
 import com.n0op.app.ws.ui.model.response.ErrorMessages;
 import com.n0op.app.ws.utils.RunWorkoutUtils;
-import sun.misc.PostVMInitHook;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author DanM
  */
 public class WorkoutServiceImpl implements WorkoutService {
-    private Map<Long, RunDTO> runMap = Collections.synchronizedMap(new LinkedHashMap<>());
 
     private DAO database;
 

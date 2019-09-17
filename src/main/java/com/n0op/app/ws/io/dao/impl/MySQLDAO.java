@@ -2,8 +2,11 @@ package com.n0op.app.ws.io.dao.impl;
 
 import com.n0op.app.ws.io.dao.DAO;
 import com.n0op.app.ws.io.entity.RunEntity;
+import com.n0op.app.ws.io.entity.UserEntity;
 import com.n0op.app.ws.shared.dto.RunDTO;
+import com.n0op.app.ws.shared.dto.UserDTO;
 import com.n0op.app.ws.utils.HibernateUtils;
+import com.n0op.app.ws.utils.UserUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,11 +22,57 @@ import java.util.List;
  */
 public class MySQLDAO implements DAO {
     Session session;
+    UserUtils userUtils = new UserUtils();
 
     @Override
     public void openConnection() {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
         session = sessionFactory.openSession();
+    }
+
+    @Override
+    public UserDTO getUserByName(String name) {
+        return null;
+    }
+
+    @Override
+    public UserDTO saveUser(UserDTO userDTO) {
+        UserDTO returnValue;
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(userDTO, userEntity);
+
+        String hash = userUtils.hashPassword(userDTO.getPassword(), userDTO.getSalt()).toString();
+        userEntity.setHash(hash);
+
+        session.beginTransaction();
+        session.save(userEntity);
+        session.getTransaction().commit();
+
+        returnValue = new UserDTO();
+        BeanUtils.copyProperties(userEntity, returnValue);
+
+        return returnValue;
+    }
+
+    @Override
+    public UserDTO getUser(String id) {
+        return null;
+    }
+
+    @Override
+    public List<UserDTO> getUsers(int start, int limit) {
+        return null;
+    }
+
+    @Override
+    public void updateUser(UserDTO userDTO) {
+
+    }
+
+
+    @Override
+    public void deleteUser(UserDTO userDTO) {
+
     }
 
     @Override

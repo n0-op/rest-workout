@@ -57,5 +57,6 @@ Contributor(s):
         <property name="hibernate.c3p0.max_statements">50</property>
 
         <mapping class="com.n0op.app.ws.io.entity.RunEntity"></mapping>
+        <mapping class="com.n0op.app.ws.io.entity.UserEntity"></mapping>
     </session-factory>
 </hibernate-configuration>
