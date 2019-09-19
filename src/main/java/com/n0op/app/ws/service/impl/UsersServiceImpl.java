@@ -1,9 +1,12 @@
 package com.n0op.app.ws.service.impl;
 
+import com.n0op.app.ws.exceptions.NoRecordFoundException;
 import com.n0op.app.ws.io.dao.DAO;
 import com.n0op.app.ws.io.dao.impl.MySQLDAO;
 import com.n0op.app.ws.service.UsersService;
 import com.n0op.app.ws.shared.dto.UserDTO;
+import com.n0op.app.ws.ui.model.response.ErrorMessage;
+import com.n0op.app.ws.ui.model.response.ErrorMessages;
 import com.n0op.app.ws.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +50,19 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDTO getUser(String id) {
-        return null;
+        UserDTO returnValue;
+
+        try {
+            this.database.openConnection();
+            returnValue = this.database.getUser(id);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            throw new NoRecordFoundException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        } finally {
+            this.database.closeConnection();
+        }
+
+        return returnValue;
     }
 
     @Override

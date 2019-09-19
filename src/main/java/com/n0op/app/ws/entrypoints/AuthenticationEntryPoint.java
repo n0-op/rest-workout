@@ -7,10 +7,7 @@ import com.n0op.app.ws.ui.model.request.CreateUserRequestModel;
 import com.n0op.app.ws.ui.model.response.UserProfileRest;
 import org.springframework.beans.BeanUtils;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -35,4 +32,18 @@ public class AuthenticationEntryPoint {
         return returnValue;
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public UserProfileRest getUser(@PathParam("id") String id){
+        UserProfileRest returnValue;
+
+        UsersService usersService = new UsersServiceImpl();
+        UserDTO userDTO = usersService.getUser(id);
+
+        returnValue = new UserProfileRest();
+        BeanUtils.copyProperties(userDTO, returnValue);
+
+        return returnValue;
+    }
 }
