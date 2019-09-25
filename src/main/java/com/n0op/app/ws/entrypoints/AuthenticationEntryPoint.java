@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author DanM
@@ -43,6 +45,24 @@ public class AuthenticationEntryPoint {
 
         returnValue = new UserProfileRest();
         BeanUtils.copyProperties(userDTO, returnValue);
+
+        return returnValue;
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public List<UserProfileRest> getUsers(@DefaultValue("0") @QueryParam("Start") int start,
+                                          @DefaultValue("50") @QueryParam("limit") int limit){
+        UsersService usersService = new UsersServiceImpl();
+        List<UserDTO> users = usersService.getUsers(start, limit);
+
+        List<UserProfileRest> returnValue = new ArrayList<>();
+
+        for(UserDTO userDTO : users) {
+            UserProfileRest userProfileRest = new UserProfileRest();
+            BeanUtils.copyProperties(userDTO, userProfileRest);
+            returnValue.add(userProfileRest);
+        }
 
         return returnValue;
     }

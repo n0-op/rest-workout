@@ -72,7 +72,17 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public List<UserDTO> getUsers(int start, int limit) {
-        return null;
+        List<UserDTO> users;
+
+        // Get users from DB
+        try {
+            this.database.openConnection();
+            users = this.database.getUsers(start, limit);
+        } finally {
+            this.database.closeConnection();
+        }
+
+        return users;
     }
 
     @Override

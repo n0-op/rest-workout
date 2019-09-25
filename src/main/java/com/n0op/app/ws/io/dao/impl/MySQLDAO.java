@@ -74,7 +74,27 @@ public class MySQLDAO implements DAO {
 
     @Override
     public List<UserDTO> getUsers(int start, int limit) {
-        return null;
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+
+        Root<UserEntity> userEntityRoot = criteria.from(UserEntity.class);
+        criteria.select(userEntityRoot);
+
+        List<UserEntity> searchResults = session.createQuery(criteria)
+                .setFirstResult(start)
+                .setMaxResults(limit)
+                .getResultList();
+
+        List<UserDTO> returnValue = new ArrayList<>();
+
+        for(UserEntity userEntity : searchResults) {
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(userEntity, userDTO);
+            returnValue.add(userDTO);
+        }
+
+        return returnValue;
     }
 
     @Override
