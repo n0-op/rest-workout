@@ -5,7 +5,7 @@ import com.n0op.app.ws.service.impl.WorkoutServiceImpl;
 import com.n0op.app.ws.shared.dto.RunDTO;
 import com.n0op.app.ws.ui.model.request.CreateRunRequestModel;
 import com.n0op.app.ws.ui.model.request.UpdateRunRequestModel;
-import com.n0op.app.ws.ui.model.response.DeletedRunProfileResponseModel;
+import com.n0op.app.ws.ui.model.response.DeletedObjectProfileResponseModel;
 import com.n0op.app.ws.ui.model.response.RequestOperation;
 import com.n0op.app.ws.ui.model.response.ResponseStatus;
 import com.n0op.app.ws.ui.model.response.RunProfileRest;
@@ -94,8 +94,8 @@ public class RunsEntryPoint {
     @DELETE
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public DeletedRunProfileResponseModel deleteRunProfile(@PathParam("id") String id) {
-        DeletedRunProfileResponseModel returnValue = new DeletedRunProfileResponseModel();
+    public DeletedObjectProfileResponseModel deleteRunProfile(@PathParam("id") String id) {
+        DeletedObjectProfileResponseModel returnValue = new DeletedObjectProfileResponseModel();
         returnValue.setRequestOperation(RequestOperation.DELETE);
 
         WorkoutService workoutService = new WorkoutServiceImpl();

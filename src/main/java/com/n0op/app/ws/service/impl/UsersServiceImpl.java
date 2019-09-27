@@ -1,5 +1,6 @@
 package com.n0op.app.ws.service.impl;
 
+import com.n0op.app.ws.exceptions.CouldNotDeleteUserException;
 import com.n0op.app.ws.exceptions.NoRecordFoundException;
 import com.n0op.app.ws.io.dao.DAO;
 import com.n0op.app.ws.io.dao.impl.MySQLDAO;
@@ -92,7 +93,14 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public void deleteUser(UserDTO userDTO) {
-
+        try {
+            this.database.openConnection();
+            this.database.deleteUser(userDTO);
+        } catch(Exception ex) {
+            throw new CouldNotDeleteUserException(ex.getMessage());
+        } finally {
+            this.database.closeConnection();
+        }
     }
 
     private UserDTO saveUser(UserDTO userDTO) {

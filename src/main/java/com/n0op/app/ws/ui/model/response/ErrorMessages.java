@@ -6,7 +6,8 @@ package com.n0op.app.ws.ui.model.response;
 public enum ErrorMessages {
     NO_RECORD_FOUND("Record with provided id is not found"),
     COULD_NOT_DELETE_WORKOUT("Could not delete workout"),
-    MISSING_REQUIRED_FIELDS("Missing Required Fields");
+    MISSING_REQUIRED_FIELDS("Missing Required Fields"),
+    COULD_NOT_DELETE_USER("Could not delete user");
 
     public String errorMessage;
 

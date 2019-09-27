@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author DanM
  */
 @XmlRootElement
-public class DeletedRunProfileResponseModel {
+public class DeletedObjectProfileResponseModel {
     private RequestOperation requestOperation;
     private ResponseStatus responseStatus;
 

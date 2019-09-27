@@ -4,11 +4,15 @@ import com.n0op.app.ws.service.UsersService;
 import com.n0op.app.ws.service.impl.UsersServiceImpl;
 import com.n0op.app.ws.shared.dto.UserDTO;
 import com.n0op.app.ws.ui.model.request.CreateUserRequestModel;
+import com.n0op.app.ws.ui.model.response.DeletedObjectProfileResponseModel;
+import com.n0op.app.ws.ui.model.response.RequestOperation;
+import com.n0op.app.ws.ui.model.response.ResponseStatus;
 import com.n0op.app.ws.ui.model.response.UserProfileRest;
 import org.springframework.beans.BeanUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +67,23 @@ public class AuthenticationEntryPoint {
             BeanUtils.copyProperties(userDTO, userProfileRest);
             returnValue.add(userProfileRest);
         }
+
+        return returnValue;
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public DeletedObjectProfileResponseModel deleteUserProfile(@PathParam("id") String id){
+        DeletedObjectProfileResponseModel returnValue = new DeletedObjectProfileResponseModel();
+        returnValue.setRequestOperation(RequestOperation.DELETE);
+
+        UsersService usersService = new UsersServiceImpl();
+        UserDTO storedUser = usersService.getUser(id);
+
+        usersService.deleteUser(storedUser);
+
+        returnValue.setResponseStatus(ResponseStatus.SUCCESS);
 
         return returnValue;
     }
