@@ -74,4 +74,12 @@ public class UserDTO implements Serializable {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
