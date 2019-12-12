@@ -11,7 +11,7 @@ import java.util.List;
 public interface UsersService {
     UserDTO createUser(UserDTO userDTO);
     UserDTO getUser(String id);
-    UserDTO getUserByName(UserDTO userDTO);
+    UserDTO getUserByUsername(String userName);
     List<UserDTO> getUsers(int start, int limit);
     void updateUser(UserDTO userDTO);
     void deleteUser(UserDTO userDTO);

@@ -1,6 +1,7 @@
 package com.n0op.app.ws.service.impl;
 
 import com.n0op.app.ws.exceptions.CouldNotDeleteUserException;
+import com.n0op.app.ws.exceptions.CouldNotUpdateUserException;
 import com.n0op.app.ws.exceptions.NoRecordFoundException;
 import com.n0op.app.ws.io.dao.DAO;
 import com.n0op.app.ws.io.dao.impl.MySQLDAO;
@@ -67,8 +68,20 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UserDTO getUserByName(UserDTO userDTO) {
-        return null;
+    public UserDTO getUserByUsername(String userName) {
+        UserDTO returnValue;
+
+        try {
+            this.database.openConnection();
+            returnValue = this.database.getUserByUsername(userName);
+        } catch(Exception ex ){
+            ex.printStackTrace();
+            throw new NoRecordFoundException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        } finally {
+            this.database.closeConnection();
+        }
+
+        return returnValue;
     }
 
     @Override
@@ -88,7 +101,14 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public void updateUser(UserDTO userDTO) {
-
+        try {
+            this.database.openConnection();
+            this.database.updateUser(userDTO);
+        } catch(Exception ex) {
+            throw new CouldNotUpdateUserException(ex.getMessage());
+        } finally {
+            this.database.closeConnection();
+        }
     }
 
     @Override

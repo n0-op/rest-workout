@@ -31,11 +31,6 @@ public class MySQLDAO implements DAO {
     }
 
     @Override
-    public UserDTO getUserByName(String name) {
-        return null;
-    }
-
-    @Override
     public UserDTO saveUser(UserDTO userDTO) {
         UserDTO returnValue;
         UserEntity userEntity = new UserEntity();
@@ -73,6 +68,24 @@ public class MySQLDAO implements DAO {
     }
 
     @Override
+    public UserDTO getUserByUsername(String username) {
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+
+        Root<UserEntity> profileRoot = criteria.from(UserEntity.class);
+        criteria.select(profileRoot);
+        criteria.where(cb.equal(profileRoot.get("userName"), username));
+
+        UserEntity userEntity = session.createQuery(criteria).getSingleResult();
+
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(userEntity, userDTO);
+
+        return userDTO;
+    }
+
+    @Override
     public List<UserDTO> getUsers(int start, int limit) {
         CriteriaBuilder cb = session.getCriteriaBuilder();
 
@@ -99,7 +112,12 @@ public class MySQLDAO implements DAO {
 
     @Override
     public void updateUser(UserDTO userDTO) {
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(userDTO, userEntity);
 
+        session.beginTransaction();
+        session.update(userEntity);
+        session.getTransaction().commit();
     }
 
 

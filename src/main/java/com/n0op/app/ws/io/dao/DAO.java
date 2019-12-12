@@ -11,7 +11,7 @@ import java.util.List;
 public interface DAO {
     void openConnection();
 
-    UserDTO getUserByName(String name);
+    UserDTO getUserByUsername(String name);
     UserDTO saveUser(UserDTO userDTO);
     UserDTO getUser(String id);
     List<UserDTO> getUsers(int start, int limit);
